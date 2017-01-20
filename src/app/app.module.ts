@@ -7,123 +7,17 @@ import {
   PipeTransform
 }                        from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule }   from '@angular/forms';
 
-import { Observable }    from 'rxjs/Observable';
-
-import {
-  MqttMessage,
-  MqttModule,
-  MqttService
-}                        from 'angular2-mqtt';
-
-@Pipe({ name: 'keys', pure: false })
-export class KeysPipe implements PipeTransform {
-  transform(map: { [key: string]: any }): string[] {
-    return Object.keys(map);
-  }
-}
-
-@Pipe({ name: 'stateToString' })
-export class StateToStringPipe implements PipeTransform {
-  private states = [
-    'CLOSED',
-    'CONNECTING',
-    'CONNECTED'
-  ];
-
-  transform(state: number): string {
-    return `${this.states[state]} (${state})`;
-  }
-}
-
-@Component({
-  selector: 'mqtt-simple',
-  template: `
-    <button type="button" class="btn btn-default" (click)="click()" [ngClass]="{'btn-danger':!msgs,'btn-success':!!msgs}">
-      <span *ngIf="!msgs">{{filter}}</span>
-      <span *ngIf="!!msgs">{{(msgs | async)?.topic}}: {{(msgs| async)?.payload.toString().substr(0,32)}}</span>
-    </button>
-  `
-})
-export class MqttSimpleComponent {
-  @Input() public filter: string;
-  public msgs: Observable<MqttMessage> = null;
-
-  constructor(private mqttService: MqttService, private cdRef: ChangeDetectorRef) { }
-
-  public click() {
-    if (!this.msgs) {
-      this.msgs = this.mqttService.observe(this.filter);
-    } else {
-      this.msgs = null;
-    }
-    this.cdRef.detectChanges();
-  }
-}
-
-@Component({
-  selector: 'mqtt-connection',
-  template: `
-    <h2>Connection</h2>
-    <table class="table">
-      <tr>
-        <th>Connection</th>
-        <td>{{(mqtt.state | async) | stateToString}}</td>
-      </tr>
-    </table>
-
-    <h2>Observers</h2>
-    <mqtt-simple filter="#"></mqtt-simple>
-    <mqtt-simple filter="$SYS/#"></mqtt-simple>
-
-    <h2>Subscriptions</h2>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Filter</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let filter of mqtt.observables | keys">
-          <td>{{filter}}</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <form name="publishForm">
-      <div class="form-group">
-        <label for="topic">Topic</label>
-        <input type="text" class="form-control" id="topic" name="topic" [(ngModel)]="topic">
-      </div>
-      <div class="form-group">
-        <label for="message">Message</label>
-        <textarea class="form-control" id="message" name="message" [(ngModel)]="message"></textarea>
-      </div>
-      <button type="submit" class="btn btn-default" (click)="publish(topic, message)">Publish</button>
-    </form>
-  `
-})
-export class MqttConnectComponent {
-  public topic: string;
-  public message: string;
-  constructor(public mqtt: MqttService) { }
-
-  public publish(topic: string, message: string) {
-    this.mqtt.publish(topic, message, {qos: 1}).subscribe((err)=>{
-      console.log(err);
-    });
-  }
-}
+import { OtherComponent} from './other.component'
 
 @Component({
   selector: 'app-root',
   template: `
-    <mqtt-connection></mqtt-connection>
+    <other-mqtt></other-mqtt>
   `
 })
 export class ExampleComponent {
-  constructor(private mqttService: MqttService) { }
+
 }
 
 export const MQTT_SERVICE_OPTIONS = {
@@ -136,25 +30,15 @@ export const MQTT_SERVICE_OPTIONS = {
   protocol: "mqtt"
 };
 
-export function mqttServiceFactory() {
-  return new MqttService(MQTT_SERVICE_OPTIONS);
-}
+
 
 @NgModule({
   imports: [
     BrowserModule,
-    FormsModule,
-    MqttModule.forRoot({
-      provide: MqttService,
-      useFactory: mqttServiceFactory
-    })
   ],
   declarations: [
+    OtherComponent,
     ExampleComponent,
-    MqttSimpleComponent,
-    MqttConnectComponent,
-    KeysPipe,
-    StateToStringPipe
   ],
   providers: [],
   bootstrap: [
