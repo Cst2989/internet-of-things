@@ -127,9 +127,13 @@ export class ExampleComponent {
 }
 
 export const MQTT_SERVICE_OPTIONS = {
-  hostname: 'localhost',
-  port: 9001,
-  path: '/mqtt'
+  hostname: 'm20.cloudmqtt.com',
+  port: 39338,
+  useSSL: true,
+  userName: "qdcaxgqc",
+  password: "eQurLLKpesr9",
+  path: '',
+  protocol: "mqtt"
 };
 
 export function mqttServiceFactory() {
