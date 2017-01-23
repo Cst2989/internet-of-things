@@ -1,4 +1,5 @@
 import { Paho } from 'ng2-mqtt/mqttws31';
+import {OnsenModule} from 'angular2-onsenui';
 
 import {
   ChangeDetectorRef,
@@ -12,16 +13,14 @@ import {
 
 @Component({
   selector: 'other-mqtt',
-  template: `
-    <h1>AIci</h1>
-  `
+  templateUrl: './other.component.html',
 })
 
 export class OtherComponent {
   private _client: Paho.MQTT.Client;
-
+  public target: boolean = true;
   public constructor() {
-    this._client = new Paho.MQTT.Client("m20.cloudmqtt.com", 39338, "web_123322");
+    this._client = new Paho.MQTT.Client("funieru252.zapto.org", 10000,"/", "A75BDC00-9876-470B-85F6-1");
 
     this._client.onConnectionLost = (responseObject: Object) => {
       console.log('Connection lost.');
@@ -33,14 +32,22 @@ export class OtherComponent {
 
     this._client.connect(
       {
-        useSSL: true,
-        userName: "qdcaxgqc",
-        password: "eQurLLKpesr9",
+        userName: "iot",
+        password: "iot",
         onSuccess: this.onConnected.bind(this)
       });
   }
 
   private onConnected(): void {
     console.log('Connected to broker.');
+
+    this._client.subscribe('/IoTmanager/+/config', {qos: 1});
+    this._client.subscribe('/IoTmanager/+/+/status', {qos: 1});
+    this._client.subscribe('/IoTmanager/+/response', {qos: 1});
+
+  }
+
+  public doSomething(widget): void {
+      console.log(widget)
   }
 }

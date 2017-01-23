@@ -4,10 +4,11 @@ import {
   Input,
   NgModule,
   Pipe,
-  PipeTransform
+  PipeTransform,
+  CUSTOM_ELEMENTS_SCHEMA
 }                        from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { OnsenModule } from 'angular2-onsenui';
 import { OtherComponent} from './other.component'
 
 @Component({
@@ -35,6 +36,7 @@ export const MQTT_SERVICE_OPTIONS = {
 @NgModule({
   imports: [
     BrowserModule,
+    OnsenModule
   ],
   declarations: [
     OtherComponent,
@@ -43,7 +45,8 @@ export const MQTT_SERVICE_OPTIONS = {
   providers: [],
   bootstrap: [
     ExampleComponent
-  ]
+],
+schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 
 export class AppModule { }
