@@ -1,17 +1,17 @@
 <ons-page>
-<ons-toolbar>
-<div class="center">Internet of Things</div>
-</ons-toolbar>
+  <ons-toolbar>
+    <div class="center">Internet of Things</div>
+  </ons-toolbar>
 
-<ons-list>
-<ons-list-header>Settings</ons-list-header>
-<ons-list-item>
-  <div class="center">
-    Enable cool feature {{ target ? 'On' : 'Off' }}
-  </div>
-  <div class="right">
-    <ons-switch [(value)]="target" (click)="doSomething(target)"></ons-switch>
-  </div>
-</ons-list-item>
-</ons-list>
+  <ons-list>
+    <ons-list-header>Settings</ons-list-header>
+    <ons-list-item>
+      <div class="center">
+        Enable cool feature {{ target ? 'On' : 'Off' }}
+      </div>
+      <div class="right">
+        <ons-switch [(value)]="target" (click)="doSomething(target)"></ons-switch>
+      </div>
+    </ons-list-item>
+  </ons-list>
 </ons-page>
